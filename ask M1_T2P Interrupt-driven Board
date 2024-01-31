@@ -1,0 +1,37 @@
+volatile int motionDetected=0 ;
+
+void setup()
+{
+  pinMode(2, INPUT);
+  pinMode(4, OUTPUT);
+  pinMode(7, OUTPUT);
+  Serial.begin(9600);
+
+  // Attach interrupt to the PIR sensor input (pin 2)
+  motionInterrupt();
+  attachInterrupt(digitalPinToInterrupt(2), motionInterrupt, CHANGE);
+  
+}
+
+void motionInterrupt()
+{
+  if (digitalRead(2) == HIGH)
+  {
+    Serial.println("Motion detected!");
+    digitalWrite(4, HIGH);
+    
+  
+    digitalWrite(7, LOW);
+  }
+  else 
+  {
+    Serial.println("Motion not detected!");
+    digitalWrite(7, HIGH);
+    digitalWrite(4, LOW);
+  }
+}
+
+void loop()
+{
+  
+}

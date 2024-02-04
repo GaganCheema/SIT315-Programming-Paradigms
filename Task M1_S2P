@@ -1,0 +1,60 @@
+
+// Pin definitions
+const uint8_t BTN_PIN = 2;  // Button pin
+const uint8_t LED_PIN = 13; // LED pin
+
+// Variable to store LED state
+uint8_t ledState = LOW;
+
+// Variable to store previous button state
+volatile uint8_t buttonPrevState;
+
+// Setup function runs once at the beginning
+void setup()
+{
+  // Set the button pin as INPUT_PULLUP to enable the internal pull-up resistor
+  pinMode(BTN_PIN, INPUT_PULLUP);
+
+  // Set the LED pin as an output
+  pinMode(LED_PIN, OUTPUT);
+
+  // Initialize serial communication for debugging
+  Serial.begin(9600);
+
+  // Attach an interrupt to the button pin that triggers the Button function on state change
+  attachInterrupt(digitalPinToInterrupt(BTN_PIN), Button, CHANGE);
+}
+
+// Main loop function runs repeatedly
+void loop()
+{
+  // The loop is intentionally left empty as the code relies on interrupts for button handling
+}
+
+// Interrupt service routine (ISR) for the button press
+void Button()
+{
+  // Read the current state of the button
+  uint8_t buttonState = digitalRead(BTN_PIN);
+
+  // Debugging information
+  Serial.print("Button State: ");
+  Serial.print(buttonState);
+  Serial.print("  Previous Button State: ");
+  Serial.print(buttonPrevState);
+  Serial.print("  Previous LED State: ");
+  Serial.println(ledState);
+
+  // Check if the button state has changed
+  if (buttonState != buttonPrevState)
+  {
+    // Toggle the LED state
+    ledState = !ledState;
+
+    // Set the LED pin to the new state
+    digitalWrite(LED_PIN, ledState);
+  }
+
+  // Update the previous button state for the next iteration
+  buttonPrevState = buttonState;
+}
